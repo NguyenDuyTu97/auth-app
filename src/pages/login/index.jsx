@@ -1,42 +1,29 @@
+import { Button, Form, Input } from "antd";
 import React from "react";
-import PropTypes from "prop-types";
-import { Button, Checkbox, Form, Input, notification } from "antd";
-import { loginApi } from "../../api/userApi";
-import "./style.scss";
 import { toast } from "react-toastify";
+import { loginApi } from "../../api/userApi";
+import { setCurrentUser } from "../../utils/localStorage";
+import toastMessage from "../../utils/toast";
+import "./style.scss";
+import { redirect, useNavigate } from "react-router-dom";
 
 function Login(props) {
-  const [api, contextHolder] = notification.useNotification();
+  const navigate = useNavigate();
 
   const onFinish = async (values) => {
     try {
       const res = await loginApi(values);
-      console.log(res, "res 11111111111");
-
       if (res?.data?.success) {
-        toast("🦄 Wow so easy!", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
+        toastMessage("success", "Login success!", {
+          autoClose: 2000,
         });
-      }
-    } catch (error) {
-      console.log(error.response); // this is the main part. Use the response property from the error object
 
-      toast("🦄 error!", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
+        setCurrentUser(res.data.data);
+        navigate("/");
+      }
+    } catch ({ response }) {
+      toastMessage("error", response?.data?.message, {
+        autoClose: 2000,
       });
     }
   };

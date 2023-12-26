@@ -4,4 +4,8 @@ const loginApi = ({ email, password }) => {
   return instance.post("login", { email, password });
 };
 
-export { loginApi };
+const getUsersApi = () => {
+  return instance.get("get-users");
+};
+
+export { loginApi, getUsersApi };
