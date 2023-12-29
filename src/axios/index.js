@@ -1,5 +1,9 @@
 import axios from "axios";
-import { getCurrentUser } from "../utils/localStorage";
+import { getCurrentUser, setCurrentUser } from "../utils/localStorage";
+import { refreshTokenApi } from "../api/userApi";
+import { setDataUser } from "../reducers/userReducer";
+import { useDispatch } from "react-redux";
+import store from "../store";
 
 const instance = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
@@ -31,17 +35,31 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   function (response) {
-    console.log(response, "response 000");
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
 
     return response;
   },
-  function (error) {
-    console.log(error, "error 111");
-    // Any status codes that falls outside the range of 2xx cause this function to trigger
-    // Do something with response error
-    return Promise.reject(error);
+  async function (error) {
+    const originalRequest = error.config;
+    if (error?.response?.status === 403 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      const res = await refreshTokenApi();
+      if (res?.data?.success) {
+        const token = res.data.data;
+
+        const currentUser = getCurrentUser();
+        const newUser = { ...JSON.parse(currentUser), token };
+        setCurrentUser({ ...newUser });
+        store.dispatch(setDataUser(newUser));
+
+        // set headers
+        instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        return instance(originalRequest);
+      }
+    }
+    // return Promise.reject(error);
   }
 );
 

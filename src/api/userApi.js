@@ -4,8 +4,12 @@ const loginApi = ({ email, password }) => {
   return instance.post("login", { email, password });
 };
 
+const refreshTokenApi = () => {
+  return instance.post("refresh-token");
+};
+
 const getUsersApi = () => {
   return instance.get("get-users");
 };
 
-export { loginApi, getUsersApi };
+export { loginApi, refreshTokenApi, getUsersApi };

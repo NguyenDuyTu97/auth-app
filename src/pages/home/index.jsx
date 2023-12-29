@@ -20,9 +20,16 @@ const Home = (props) => {
     navigate("/login");
   };
 
+  const onReloadData = async () => {
+    await getUsersApi();
+  };
+
   return (
     <div>
       Home
+      <div>
+        <button onClick={onReloadData}>Reload data</button>
+      </div>
       <button onClick={onLogout}>Logout</button>
     </div>
   );

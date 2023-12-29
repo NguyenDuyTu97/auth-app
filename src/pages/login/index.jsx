@@ -6,8 +6,11 @@ import { setCurrentUser } from "../../utils/localStorage";
 import toastMessage from "../../utils/toast";
 import "./style.scss";
 import { redirect, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setDataUser } from "../../reducers/userReducer";
 
 function Login(props) {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const onFinish = async (values) => {
@@ -19,6 +22,8 @@ function Login(props) {
         });
 
         setCurrentUser(res.data.data);
+        dispatch(setDataUser(res.data.data));
+
         navigate("/");
       }
     } catch ({ response }) {
