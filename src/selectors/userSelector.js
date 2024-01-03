@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
 
-const getUserData = (state) => state?.users?.data;
+const getUserData = (state) => state?.user?.data;
 
 export { getUserData };

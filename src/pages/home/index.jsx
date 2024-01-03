@@ -3,9 +3,13 @@ import PropTypes from "prop-types";
 import { getUsersApi } from "../../api/userApi";
 import { useNavigate } from "react-router-dom";
 import { removeItem } from "../../utils/localStorage";
+import { useSelector } from "react-redux";
 
 const Home = (props) => {
   const navigate = useNavigate();
+
+  const store = useSelector((state) => state);
+  console.log(store, "store home 111111");
 
   useEffect(() => {
     const getUsers = async () => {
@@ -27,6 +31,15 @@ const Home = (props) => {
   return (
     <div>
       Home
+      <div>
+        <button
+          onClick={() => {
+            navigate("/about");
+          }}
+        >
+          About
+        </button>
+      </div>
       <div>
         <button onClick={onReloadData}>Reload data</button>
       </div>
