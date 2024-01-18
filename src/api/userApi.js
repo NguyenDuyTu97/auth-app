@@ -8,8 +8,13 @@ const refreshTokenApi = () => {
   return instance.post("refresh-token");
 };
 
+// CRUD
 const getUsersApi = () => {
   return instance.get("get-users");
 };
 
-export { loginApi, refreshTokenApi, getUsersApi };
+const deleteUserApi = (id) => {
+  return instance.delete(`/delete-user/${id}`);
+};
+
+export { loginApi, refreshTokenApi, getUsersApi, deleteUserApi };

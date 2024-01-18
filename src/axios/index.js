@@ -59,7 +59,7 @@ instance.interceptors.response.use(
         return instance(originalRequest);
       }
     }
-    // return Promise.reject(error);
+    return Promise.reject(error);
   }
 );
 
