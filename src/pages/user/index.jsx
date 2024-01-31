@@ -3,9 +3,11 @@ import { Button, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { deleteUserApi, getUsersApi } from "../../api/userApi";
 import toastMessage from "../../utils/toast";
+import AddAndUpdateUser from "./components/AddAndUpdateUser";
 
 export default function User() {
   const [users, setUsers] = useState([]);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   useEffect(() => {
     getList();
@@ -83,14 +85,31 @@ export default function User() {
     },
   ];
 
+  // add user modal
+  const handleShowAddModal = () => {
+    setShowAddModal(true);
+  };
+
+  const handleCloseAddModal = () => {
+    setShowAddModal(false);
+  };
+
   return (
     <div
       style={{
         padding: 20,
       }}
     >
-      <Button type="primary">Add user</Button>
+      <Button type="primary" onClick={handleShowAddModal}>
+        Add user
+      </Button>
       <Table columns={columns} dataSource={users} />
+      {showAddModal && (
+        <AddAndUpdateUser
+          open={showAddModal}
+          handleCancel={handleCloseAddModal}
+        />
+      )}
     </div>
   );
 }

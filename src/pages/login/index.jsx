@@ -1,8 +1,8 @@
 import { Button, Form, Input } from "antd";
-import React from "react";
+import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 import { loginApi } from "../../api/userApi";
-import { setCurrentUser } from "../../utils/localStorage";
+import { removeItem, setCurrentUser } from "../../utils/localStorage";
 import toastMessage from "../../utils/toast";
 import "./style.scss";
 import { redirect, useNavigate } from "react-router-dom";
@@ -12,6 +12,11 @@ import { setDataUser } from "../../reducers/userReducer";
 function Login(props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    removeItem("userAuth");
+    dispatch(setDataUser(null));
+  }, []);
 
   const onFinish = async (values) => {
     try {
@@ -27,8 +32,6 @@ function Login(props) {
         navigate("/");
       }
     } catch ({ response }) {
-      console.log(response, "response 11111");
-
       toastMessage("error", response?.data?.message, {
         autoClose: 2000,
       });

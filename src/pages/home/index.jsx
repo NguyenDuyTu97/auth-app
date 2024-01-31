@@ -41,6 +41,15 @@ const Home = (props) => {
         </button>
       </div>
       <div>
+        <button
+          onClick={() => {
+            navigate("/user");
+          }}
+        >
+          User
+        </button>
+      </div>
+      <div>
         <button onClick={onReloadData}>Reload data</button>
       </div>
       <button onClick={onLogout}>Logout</button>
