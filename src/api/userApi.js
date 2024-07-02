@@ -13,8 +13,23 @@ const getUsersApi = () => {
   return instance.get("get-users");
 };
 
+const addUsersApi = (data) => {
+  return instance.post("add-user", data);
+};
+
+const updateUsersApi = (data) => {
+  return instance.patch("update-user", data);
+};
+
 const deleteUserApi = (id) => {
   return instance.delete(`/delete-user/${id}`);
 };
 
-export { loginApi, refreshTokenApi, getUsersApi, deleteUserApi };
+export {
+  loginApi,
+  refreshTokenApi,
+  getUsersApi,
+  addUsersApi,
+  updateUsersApi,
+  deleteUserApi,
+};

@@ -1,14 +1,38 @@
 import React from "react";
 import ModalComponent from "../../../components/modal";
 import { Button, Form, Input } from "antd";
+import { addUsersApi, updateUsersApi } from "../../../api/userApi";
+import toastMessage from "../../../utils/toast";
 
-export default function AddAndUpdateUser({ open, handleCancel }) {
-  const handleFinish = () => {};
+export default function AddAndUpdateUser({
+  open,
+  handleCancel,
+  userEdit,
+  setUserEdit,
 
-  const handleFinishFailed = () => {};
+  onLoadData,
+}) {
+  const handleFinish = async () => {
+    let url = addUsersApi;
+    if (userEdit?._id) url = updateUsersApi;
+
+    const res = await url(userEdit);
+    if (res?.data?.success) {
+      toastMessage("success", res?.data?.message, {
+        autoClose: 2000,
+      });
+
+      handleCancel();
+      onLoadData();
+    }
+  };
 
   return (
-    <ModalComponent open={open} handleCancel={handleCancel}>
+    <ModalComponent
+      open={open}
+      handleCancel={handleCancel}
+      handleOk={handleFinish}
+    >
       <Form
         name="basic"
         labelCol={{
@@ -21,19 +45,20 @@ export default function AddAndUpdateUser({ open, handleCancel }) {
           maxWidth: 600,
         }}
         initialValues={{
-          remember: true,
+          ...userEdit,
         }}
-        onFinish={handleFinish}
-        onFinishFailed={handleFinishFailed}
         autoComplete="off"
+        onValuesChange={(changedValues, allValues) => {
+          setUserEdit({ ...userEdit, ...allValues });
+        }}
       >
         <Form.Item
-          label="Username"
-          name="username"
+          label="FirstName"
+          name="firstName"
           rules={[
             {
               required: true,
-              message: "Please input your username!",
+              message: "Please input your firstName!",
             },
           ]}
         >
@@ -41,17 +66,45 @@ export default function AddAndUpdateUser({ open, handleCancel }) {
         </Form.Item>
 
         <Form.Item
-          label="Password"
-          name="password"
+          label="LastName"
+          name="lastName"
           rules={[
             {
               required: true,
-              message: "Please input your password!",
+              message: "Please input your lastName!",
             },
           ]}
         >
-          <Input.Password />
+          <Input />
         </Form.Item>
+
+        <Form.Item
+          label="Email"
+          name="email"
+          rules={[
+            {
+              required: true,
+              message: "Please input your email!",
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+
+        {!userEdit?._id && (
+          <Form.Item
+            label="Password"
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: "Please input your password!",
+              },
+            ]}
+          >
+            <Input.Password />
+          </Form.Item>
+        )}
       </Form>
     </ModalComponent>
   );

@@ -7,6 +7,7 @@ import AddAndUpdateUser from "./components/AddAndUpdateUser";
 
 export default function User() {
   const [users, setUsers] = useState([]);
+  const [userEdit, setUserEdit] = useState({});
   const [showAddModal, setShowAddModal] = useState(false);
 
   useEffect(() => {
@@ -50,6 +51,11 @@ export default function User() {
     }
   };
 
+  const handleEdit = async (item) => {
+    setUserEdit(item);
+    setShowAddModal(true);
+  };
+
   const columns = [
     {
       title: "Full Name",
@@ -72,7 +78,11 @@ export default function User() {
       render: (text, record) => {
         return (
           <>
-            <Button type="primary" icon={<EditOutlined />} />
+            <Button
+              type="primary"
+              icon={<EditOutlined />}
+              onClick={() => handleEdit(record)}
+            />
             <Button
               type="primary"
               danger
@@ -91,6 +101,7 @@ export default function User() {
   };
 
   const handleCloseAddModal = () => {
+    setUserEdit({});
     setShowAddModal(false);
   };
 
@@ -107,7 +118,10 @@ export default function User() {
       {showAddModal && (
         <AddAndUpdateUser
           open={showAddModal}
+          userEdit={userEdit}
+          setUserEdit={setUserEdit}
           handleCancel={handleCloseAddModal}
+          onLoadData={getList}
         />
       )}
     </div>
